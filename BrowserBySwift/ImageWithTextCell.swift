@@ -9,9 +9,9 @@
 import Cocoa
 
 class ImageWithTextCell : NSTextFieldCell {
-    override func drawInteriorWithFrame(cellFrame: NSRect, inView controlView: NSView!){
+    override func drawInteriorWithFrame(cellFrame: NSRect,inView controlView: NSView){
         // Retrieving image and text of associated object
-        let node:AnyObject = self.objectValue
+        let node:AnyObject = self.objectValue!
         let image:NSImage = node.valueForKey("icon") as NSImage
         let name:NSString = node.valueForKey("name") as NSString
         

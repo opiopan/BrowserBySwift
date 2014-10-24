@@ -19,12 +19,12 @@ class FileNode : NSObject, NSCopying {
     var icon: NSImage? {
         return NSWorkspace.sharedWorkspace().iconForFile(self.folderName + "/" + self.name)
     }
-    @lazy var childFolders: FileNode[] = self.buildChildren(true)
-    @lazy var childFiles: FileNode[] = self.buildChildren(false)
-    var children: FileNode[]{
+    lazy var childFolders: [FileNode] = self.buildChildren(true)
+    lazy var childFiles: [FileNode] = self.buildChildren(false)
+    var children: [FileNode]{
         return childFolders
     }
-    var allChildren: FileNode[]{
+    var allChildren: [FileNode]{
         return self.childFolders + self.childFiles
     }
     var isLeaf: Bool{
@@ -44,17 +44,17 @@ class FileNode : NSObject, NSCopying {
         self.isFolder = isFolder
     }
     
-    func buildChildren(buildFolders: Bool) -> FileNode[] {
-        var rc: FileNode[] = []
+    func buildChildren(buildFolders: Bool) -> [FileNode] {
+        var rc: [FileNode] = []
         if self.isFolder {
             let base = self.folderName + "/" + self.name
             let fileManager = NSFileManager.defaultManager()
-            if let fnames = fileManager.contentsOfDirectoryAtPath(base, error: nil) as? String[]{
+            if let fnames = fileManager.contentsOfDirectoryAtPath(base, error: nil) as? [String]{
                 for fname in fnames{
                     var isDir: ObjCBool = false
                     if fileManager.fileExistsAtPath(base + "/" + fname, isDirectory: &isDir){
-                        if (!buildFolders || isDir == true) && fname.substringToIndex(1) != "." {
-                            rc += FileNode(name: fname, folderName: base, isFolder: isDir)
+                        if (!buildFolders || isDir.boolValue) && !fname.hasPrefix("."){
+                            rc.append(FileNode(name: fname, folderName: base, isFolder: isDir.boolValue))
                         }
                     }
                 }
@@ -66,7 +66,7 @@ class FileNode : NSObject, NSCopying {
     //-----------------------------------------------------------------------------------------
     // Imprementation for NSCopying protcol
     //-----------------------------------------------------------------------------------------
-    func copyWithZone(_zone: NSZone) -> AnyObject!{
+    func copyWithZone(_zone: NSZone) -> AnyObject{
         return self
     }
 }

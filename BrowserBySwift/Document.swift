@@ -37,7 +37,7 @@ class Document: NSDocument {
     //-----------------------------------------------------------------------------------------
     // Initializing document
     //-----------------------------------------------------------------------------------------
-    init() {
+    override init() {
         super.init()
     }
 
@@ -56,9 +56,10 @@ class Document: NSDocument {
     override func readFromURL(absoluteURL: NSURL?, ofType typeName: String?, error outError: NSErrorPointer) -> Bool {
         if let url = absoluteURL {
             var path = url.path
-            root = FileNode(name: path.lastPathComponent,
-                            folderName: path.stringByDeletingLastPathComponent,
-                            isFolder: true)
+            var name = path?.lastPathComponent
+            var dir = path?.stringByDeletingLastPathComponent
+            
+            root = FileNode(name: name!, folderName: dir!, isFolder: true)
         }
         return true;
     }
